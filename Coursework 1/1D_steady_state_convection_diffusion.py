@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from algorithm_and_tools import analytical, plotting
 from schemes import *
 
@@ -32,8 +31,12 @@ def solve():
     result_names = ["Central Differencing Scheme",
                     "Upwind Differencing Scheme",
                     "Power Law Differencing Scheme",]
-    
+    figures = []
+
     for i, j in zip(result_lists, result_names):
-        figures = plotting(x_grid, i, T_analytical, j)
+        figure = plotting(x_grid, i, T_analytical, j)
+        figures.append(figure)
+
     return figures
+
 solve()
