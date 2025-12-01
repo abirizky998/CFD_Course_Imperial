@@ -1,5 +1,5 @@
 import numpy as np
-from algorithm_and_tools import analytical, plotting
+from algorithm_and_tools import analytical, plotting, error_calc
 from schemes import *
 
 def solve():
@@ -16,27 +16,31 @@ def solve():
     vel = 1.0 # m/s
 
     # Equations Setup
-    Pe_global = density * vel * length / gamma_T
-    Pe_local = density * vel * delta_x / gamma_T
-    
-    print("Global Peclet Number:", Pe_global)
-    print("Local Peclet Number:", Pe_local)
+    Pe_global = round((density * vel * length / gamma_T),3)
+    Pe_local = round((density * vel * delta_x / gamma_T),3)
     
     T_cds = cds(cell_count, gamma_T, delta_x, density, vel, Temp)
     T_uds = uds(cell_count, gamma_T, delta_x, density, vel, Temp)
-    T_plds = plds(cell_count, gamma_T, delta_x, density, vel, Temp, Pe_local)
+    T_pds = pds(cell_count, gamma_T, delta_x, density, vel, Temp, Pe_local)
     T_analytical = analytical(x_grid, length, Pe_global)
 
-    result_lists = [T_cds, T_uds, T_plds]
+    # Errors
+    Error_cds = error_calc(cell_count, T_analytical, T_cds)
+    Error_uds = error_calc(cell_count, T_analytical, T_uds)
+    Error_pds = error_calc(cell_count, T_analytical, T_pds)
+
+    result_lists = [T_cds, T_uds, T_pds]
     result_names = ["Central Differencing Scheme",
                     "Upwind Differencing Scheme",
                     "Power Law Differencing Scheme",]
+    error_vals = [Error_cds, Error_uds, Error_pds]
+
     figures = []
 
-    for i, j in zip(result_lists, result_names):
-        figure = plotting(x_grid, i, T_analytical, j)
+    for i, j, k in zip(result_lists, result_names, error_vals):
+        figure = plotting(x_grid, i, T_analytical, j, k, Pe_global, Pe_local)
         figures.append(figure)
-
+        
     return figures
 
 solve()

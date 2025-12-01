@@ -26,13 +26,17 @@ def tdma(N, a, b, c, d, T):
 def analytical(grid, L, Pe):
     return 100 + ((np.exp(grid * Pe / L) - 1) / (np.exp(Pe) - 1) * (20-100))
 
-def plotting(grid, scheme_results, analytical_results, title):
-    fig, ax = plt.subplots()
-    ax.plot(grid, analytical_results, label='Analytical')
-    ax.plot(grid, scheme_results, label='Numerical', c='black', linestyle='--')
-    ax.scatter(grid, scheme_results, label='Numerical', c='red')
+def error_calc(grid, analytical_value, numerical_value):
+    E = 100 * round((sum(abs((numerical_value - analytical_value)/analytical_value)) / grid),4)
+    return f'{E} %' 
 
-    ax.set_title(title)
+def plotting(grid, scheme_results, analytical_results, title, error_value, Pe_G, Pe_L):
+    fig, ax = plt.subplots()
+    ax.plot(grid, analytical_results, label=f'Analytical', c='black')
+    ax.plot(grid, scheme_results, label=f'Numerical, Error:{error_value}', 
+            c='blue', ls='--', marker='o', mfc='red')
+
+    ax.set_title(f"{title} \n Pe Global: {Pe_G}, Pe Local: {Pe_L}")
     ax.set_xlabel('x / L')
     ax.set_ylabel('Temperature')
     ax.legend()

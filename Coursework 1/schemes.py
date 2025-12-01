@@ -26,7 +26,7 @@ def uds(N, gamma, dx, rho, u, temp):
 
     return tdma(N, a, b, c, d, temp)
 
-def plds(N, gamma, dx, rho, u, temp, Pe):
+def pds(N, gamma, dx, rho, u, temp, Pe):
     a = np.zeros(N)
     b = np.zeros(N)
     c = np.zeros(N)
