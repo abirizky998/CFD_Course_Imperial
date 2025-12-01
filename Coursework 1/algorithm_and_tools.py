@@ -20,17 +20,17 @@ def tdma(N, a, b, c, d, T):
 
     for i in range(N-2, -1, -1): # backwards solve
         T[i] = P[i] * T[i+1] + Q[i]
-    
+
     return T.copy()
 
 def analytical(grid, L, Pe):
     return 100 + ((np.exp(grid * Pe / L) - 1) / (np.exp(Pe) - 1) * (20-100))
 
-def error_calc(grid, analytical_value, numerical_value):
-    E = 100 * round((sum(abs((numerical_value - analytical_value)/analytical_value)) / grid),4)
+def error_calc(grid, analytical, numerical):
+    E = 100 * round((sum(abs((numerical - analytical)/analytical)) / grid),4)
     return f'{E} %' 
 
-def plotting(grid, scheme_results, analytical_results, title, error_value, Pe_G, Pe_L):
+def plotting(grid, analytical_results, title, scheme_results, error_value, Pe_G, Pe_L):
     fig, ax = plt.subplots()
     ax.plot(grid, analytical_results, label=f'Analytical', c='black')
     ax.plot(grid, scheme_results, label=f'Numerical, Error:{error_value}', 
@@ -41,4 +41,4 @@ def plotting(grid, scheme_results, analytical_results, title, error_value, Pe_G,
     ax.set_ylabel('Temperature')
     ax.legend()
 
-    return plt.show()
+    return fig
