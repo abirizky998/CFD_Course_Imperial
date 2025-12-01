@@ -24,8 +24,8 @@ def tdma(N, a, b, c, d, T, TW, TE):
 
     return T.copy()
 
-def analytical(grid, L, Pe):
-    return 100 + ((np.exp(grid * Pe / L) - 1) / (np.exp(Pe) - 1) * (20-100))
+def analytical(grid, L, Pe, Phi_0, Phi_L):
+    return Phi_0 + ((np.exp(grid * Pe / L) - 1) / (np.exp(Pe) - 1) * (Phi_L-Phi_0))
 
 def error_calc(grid, analytical, numerical):
     return 100 * (sum(abs((numerical - analytical)/analytical)) / grid)
@@ -36,7 +36,7 @@ def plotting(grid, analytical_results, title, scheme_results, error_value, Pe_G,
     ax.plot(grid, scheme_results, label=f'Numerical, Error:{round(error_value,2)}%', 
             c='blue', ls='--', marker='o', mfc='red') 
 
-    ax.set_title(f"{title} \n Pe Global: {Pe_G}, Pe Local: {round(Pe_L,3)}")
+    ax.set_title(f"{title} \n Pe Global: {round(Pe_G,3)}, Pe Local: {round(Pe_L,3)}")
     ax.set_xlabel('x / L')
     ax.set_ylabel('Temperature (°C)')
     ax.legend()
