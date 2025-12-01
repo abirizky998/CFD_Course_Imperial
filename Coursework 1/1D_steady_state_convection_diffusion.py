@@ -2,28 +2,25 @@ import numpy as np
 from algorithm_and_tools import analytical, plotting, error_calc
 from schemes import *
 
-def solve(length, cell_count, gamma_T, density, vel):
+def solve(length, cell_count, gamma_T, density, vel, T_West, T_East):
     # Domain setup
-    delta_x = length / cell_count
-    x = np.linspace(0, length, cell_count)
-
-    # T field init 
+    delta_x = length / (cell_count - 1)
+    x = np.linspace(0, length, cell_count) 
     Temp = np.full(cell_count,20.0) # deg C
 
-    # Equations Setup
-    Pe_global = round((density * vel * length / gamma_T),3)
-    Pe_local = round((density * vel * delta_x / gamma_T),3)
+    # Equations Setup, do not round the values
+    Pe_global = (density * vel * length / gamma_T)
+    Pe_local = (density * vel * delta_x / gamma_T)
     T_analytical = analytical(x, length, Pe_global)
 
+    # note the order for solving in for loop at the end
     schemes = ["Central Differencing Scheme",
                 "Upwind Differencing Scheme",
                 "Power Law Differencing Scheme",]
-    results = [cds(cell_count, gamma_T, delta_x, density, vel, Temp), 
-                uds(cell_count, gamma_T, delta_x, density, vel, Temp), 
-                pds(cell_count, gamma_T, delta_x, density, vel, Temp, Pe_local)]
-    errors = [error_calc(cell_count, T_analytical, results[0]),
-              error_calc(cell_count, T_analytical, results[1]),
-              error_calc(cell_count, T_analytical, results[2])]
+    results = [cds(cell_count, gamma_T, delta_x, density, vel, Temp, T_West, T_East), 
+                uds(cell_count, gamma_T, delta_x, density, vel, Temp, T_West, T_East), 
+                pds(cell_count, gamma_T, delta_x, density, vel, Temp, T_West, T_East, Pe_local)]
+    errors = [error_calc(cell_count, T_analytical, res) for res in results]
 
     figures = []
     for i, j, k in zip(schemes, results, errors):
@@ -32,4 +29,6 @@ def solve(length, cell_count, gamma_T, density, vel):
         
     return (i for i in figures)
 
-solve(length = 1.0, cell_count = 10, gamma_T = 0.1, density = 1.0, vel = 0.5)
+solve(length = 1.0, cell_count = 11, # domain setup
+      gamma_T = 0.5, density = 1.0, # fluid properties
+      vel = 1.5, T_West=100, T_East=20) # boundary conditions
