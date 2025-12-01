@@ -6,7 +6,7 @@ def solve(length, cell_count, gamma_T, density, vel, T_West, T_East):
     # Domain setup
     delta_x = length / (cell_count - 1)
     x = np.linspace(0, length, cell_count) 
-    Temp = np.full(cell_count,20.0) # deg C
+    Temp = np.full(cell_count, T_East) # deg C
 
     # Equations Setup, do not round the values
     Pe_global = (density * vel * length / gamma_T)
