@@ -59,19 +59,3 @@ def error_dx(dx, cds_err, uds_err, pds_err, u, gamma, density):
     ax.legend()
     
     return plt.show()
-
-def error_cell(N, cds_err, uds_err, pds_err, u, gamma, density):
-    fig, ax = plt.subplots()
-    ax.plot(N, cds_err,label='CDS', color='blue', marker='o')
-    ax.plot(N, uds_err,label='UDS', color='green', marker='s')
-    ax.plot(N, pds_err,label='PLDS', color='red', marker='^')
-
-    ax.set_title("Grid-Point vs Error Value\n"
-    fr"$\rho = {density}$ kg/m$^3$, $\Gamma_\phi = {gamma}$ kg/ms, $u = {u}$ m/s")
-    ax.set_xlabel("Grid-Point Count")
-    ax.set_ylabel("Error (%)")
-    ax.set_yscale('log')
-    ax.grid(True, which="both", ls="-", alpha=0.2)
-    ax.legend()
-
-    return plt.show()

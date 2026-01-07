@@ -1,5 +1,5 @@
 import numpy as np
-from algorithm_and_tools import analytical, plotting, error_calc, error_dx, error_cell
+from algorithm_and_tools import analytical, plotting, error_calc, error_dx
 from schemes import cds, uds, pds
 
 def solve(length, cell_count, gamma_T, density, vel, T_West, T_East):
@@ -41,4 +41,3 @@ for i in cell_count:
     err_pds.append(errors["PLDS"])
 
 error_dx(dx_list, err_cds, err_uds, err_pds, u, gamma_T, rho)
-error_cell(cell_count, err_cds, err_uds, err_pds, u, gamma_T, rho)
