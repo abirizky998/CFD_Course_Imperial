@@ -48,7 +48,7 @@ def error_dx(dx, cds_err, uds_err, pds_err, u, gamma, density):
 
     ax.set_title("Grid-Point Spacing vs. Cell Count\n"
     fr"$\rho = {density}$ kg/m$^3$, $\Gamma_\phi = {gamma}$ kg/ms, $u = {u}$ m/s" + "\n")
-    ax.set_xlabel(fr"$\delta$ x = domain length / cell count")
+    ax.set_xlabel(fr"$\delta$ x (m)")
     ax.set_ylabel('Error (%)')
     ax.set_yscale('log')
     ax.secondary_xaxis(

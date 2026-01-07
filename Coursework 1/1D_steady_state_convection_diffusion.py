@@ -16,28 +16,29 @@ def solve(length, cell_count, gamma_T, density, vel, T_West, T_East):
         "UDS" : uds(cell_count, gamma_T, delta_x, density, vel, Temp, T_West, T_East), 
         "PLDS" : pds(cell_count, gamma_T, delta_x, density, vel, Temp, T_West, T_East, Pe_local)
         }
-    
     errors = {name: error_calc(cell_count, T_analytical, res) for name, res in results.items()}
-    return x, T_analytical, results, errors, Pe_local, Pe_global
+    
+    return delta_x, x, T_analytical, results, errors, Pe_local, Pe_global
 
-L, rho, gamma_T, u = 1.0, 1.0, 0.1, 1.5
+L, rho, gamma_T, u, TW, TE = 1.0, 1.0, 0.1, 1.5, 100.0, 20.0
 
 # Compare between schemes
-cell_counts = [31, 11, 7]
+cell_counts = [31, 11, 7, 4]
 for N in cell_counts:
     print(f"Solving for Cell Count = {N}")
-    x, T_analytical, results, errors, Pe_L, Pe_G = solve(L, N, gamma_T, rho, u, 100.0, 20.0)
+    dx, x, T_analytical, results, errors, Pe_L, Pe_G = solve(L, N, gamma_T, rho, u, TW, TE)
+    print(f"Grid Spacing = {dx}")
     for name in results:
         plotting(x, T_analytical, f"{name}", results[name], errors[name], Pe_G, Pe_L)
 
-# Comparing Pe values in each scheme
-cell_count, err_cds, err_uds, err_pds, dx, pe = [i for i in range(5,50,1)], [], [], [], [], []
+# Comparing error values in each scheme for dx, cell count, and Pe
+cell_count, err_cds, err_uds, err_pds, dx_list = [i for i in range(4,50,1)], [], [], [], []
 for i in cell_count:
-    x, T_analytical, results, errors, Pe_L, Pe_G = solve(L, i, gamma_T, rho, u, 100.0, 20.0)
-    dx.append(L / (i-1))
+    dx, x, T_analytical, results, errors, Pe_L, Pe_G = solve(L, i, gamma_T, rho, u, TW, TE)
+    dx_list.append(dx)
     err_cds.append(errors["CDS"])
     err_uds.append(errors["UDS"])
     err_pds.append(errors["PLDS"])
 
-error_dx(dx, err_cds, err_uds, err_pds, u, gamma_T, rho)
+error_dx(dx_list, err_cds, err_uds, err_pds, u, gamma_T, rho)
 error_cell(cell_count, err_cds, err_uds, err_pds, u, gamma_T, rho)
